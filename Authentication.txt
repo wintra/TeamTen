@@ -1,0 +1,92 @@
+import java.util.Locale;
+import java.util.stream.Stream;
+import java.text.SimpleDateFormat;
+
+public class Authentication
+{
+	ClientMediator mediator;
+
+  public Authentication(ClientMediator m)
+  {
+    mediator = m;
+  }
+
+  boolean auth_volunteer(Volunteer vol){
+	  if(vol.name.isEmpty())
+		  return false;
+	  if(vol.phone_num.isEmpty())
+		  return false;
+	  
+	  SimpleDateFormat str_to_date = new SimpleDateFormat("yyyyMMddHHmm");
+	  String sd =str_to_date.format(vol.start_date);
+	  String ed =str_to_date.format(vol.end_date);
+	  
+	  if(dateCheck(sd, "yyyyMMddHHmm")) {}
+	  else
+		  return false;
+	  
+	  if(dateCheck(ed, "yyyyMMddHHmm")) {}
+	  else
+		  return false;
+
+	  return true;
+	  
+  }
+
+  boolean auth_card(Card card) {
+		
+		if(card.name.isEmpty())
+			  return false;
+		if(card.phone_num.isEmpty())
+			  return false;
+		if(numberCheck(Integer.parseInt(card.phone_num))) {}
+		else
+			return false;
+		
+		/*if(card.VMS_ID.isEmpty()){}
+		else
+			vms형식이 맞는가?
+			return false;
+			*/
+		if(card.date.isEmpty())
+			  return false;
+		
+		if(dateCheck(card.date, "yyyyMMddHHmm")) {}
+		  else
+			  return false;
+		
+	  return true;
+	  
+  }
+  
+  //date 형식이 맞는지 확인
+  public static boolean dateCheck(String date, String format) {
+      SimpleDateFormat dateFormatParser = new SimpleDateFormat(format, Locale.KOREA);
+      dateFormatParser.setLenient(false);
+      try {
+          dateFormatParser.parse(date);
+          return true;
+      } catch (Exception Ex) {
+          return false;
+      }
+  }
+  
+  //폰번호 자리수가맞는지("-"로 나누되 3-4-4형식으로 확인하다)
+  public static boolean numberCheck(int num) {
+	  int[] digits = Stream.of(String.valueOf(num).split("-")).mapToInt(Integer::parseInt).toArray();
+	  
+	 if((Math.log10(digits[0])+1) == 3) {}
+	 else 
+		 return false;
+	 
+	 if((Math.log10(digits[1])+1) == 4) {}
+	 else 
+		 return false;
+	 
+	 if((Math.log10(digits[2])+1) == 4) {}
+	 else 
+		 return false;
+	 
+	 return true;
+  }
+}
